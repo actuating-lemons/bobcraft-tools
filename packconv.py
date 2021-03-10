@@ -182,7 +182,7 @@ if __name__ == "__main__":
 		# used for textures that are either animated or encompass more than one block
 		if not 2 in indice: indice.insert(2,1)
 		indice[2] = indice[2] * 16
-		if not 3 in indice: indice.insert(3,1)
+		if not 3 in indice: indice.insert(3,indice[2]) # assume it to be an equal size
 		indice[3] = indice[3] * 16
 
 		texture = terrainpng.crop((indice[0], indice[1],
