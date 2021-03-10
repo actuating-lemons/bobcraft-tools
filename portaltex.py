@@ -6,14 +6,16 @@ import math
 import random
 
 def generate():
-	portal_texture = Image.new("RGB", (32,1024))
+	portal_texture = Image.new("RGBA", (16,512))
 	portalTextureData = portal_texture.load()
+
+	random.seed(100)
 
 	for i in range(32):
 		for j in range(16):
 			for k in range(16):
 
-				a = 0
+				rand = 0
 
 				for l in range(2):
 					
@@ -38,18 +40,19 @@ def generate():
 					g = math.atan2(e, d) + (((i / 32) * math.pi * 2 - f * 10) + (l * 2) * ( l * 2 - 1))
 					g = (math.sin(g) + 1) / 2
 					g = g / (f + 1.0)
-					a += g * 0.5
+					rand += g * 0.5
 				
-				a += random.random() * 0.1
+				rand += random.random() * 0.1
 				
-				i1 = a * 100 + 155
-				j1 = a * a * 200 + 55
-				k1 = a * a * a * a * 255
-				l1 = a * 100 + 155
-				i2 = int(k * 16 + j)
+				r = rand * rand * 200 + 55
+				g = rand * rand * rand * rand * 255
+				b = rand * 100 + 155
+				a = rand * 100 + 155
 
-				print(j1, k1, i1, l1)
-				portalTextureData[i, i2] = (round(j1), round(k1), round(i1))#, l1)
+				i2 = round(k + j)
+
+				# print(j1, k1, i1, l1)
+				portalTextureData[j, k + i * 16] = (round(r), round(g), round(b), round(a))
 
 	portal_texture.show()
 
