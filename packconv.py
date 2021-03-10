@@ -170,7 +170,9 @@ if __name__ == "__main__":
 	terrainpng = jar.open("terrain.png")
 	terrainpng = Image.open(terrainpng)
 
-	for tex in tqdm(texture_indices, desc="crop & save textures"):
+	textures = {}
+
+	for tex in tqdm(texture_indices, desc="crop textures"):
 		indice = texture_indices[tex]
 
 		indice[0] = indice[0] * 16
@@ -178,8 +180,11 @@ if __name__ == "__main__":
 
 		texture = terrainpng.crop((indice[0], indice[1],
 								  indice[0]+16, indice[1]+16))
-		
 
+		textures[tex] = texture
+	
+	for texture in tqdm(textures, desc="save textures"):
+		texture = textures[texture]
 		texture.save(
 			os.path.join("bobcraft-minecraft-texturepack", tex)
 			)
