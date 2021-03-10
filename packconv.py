@@ -138,6 +138,8 @@ texture_indices = {
 	"chiseled_stone_brick.png": [5,13],
 
 	"wool_grey.png": [1,14],
+
+	"crack_anylength.png": [0,15,10,1],
 }
 
 if __name__ == "__main__":
@@ -182,7 +184,7 @@ if __name__ == "__main__":
 		# used for textures that are either animated or encompass more than one block
 		if not 2 in indice: indice.insert(2,1)
 		indice[2] = indice[2] * 16
-		if not 3 in indice: indice.insert(3,indice[2]) # assume it to be an equal size
+		if not 3 in indice: indice.insert(3,indice[2]/16) # assume it to be an equal size
 		indice[3] = indice[3] * 16
 
 		texture = terrainpng.crop((indice[0], indice[1],
@@ -190,10 +192,15 @@ if __name__ == "__main__":
 
 		textures[tex] = texture
 
-	for texture in tqdm(textures, desc="save textures"):
-		texture = textures[texture]
+	# Bobcraft has a few textures that minecraft technically doesn't.
+	# (atleast in the terrain.png file)
+	# So we'll composite them from existing textures we have in terrain.png!
+
+
+	for texturename in tqdm(textures, desc="save textures"):
+		texture = textures[texturename]
 		texture.save(
-			os.path.join("bobcraft-minecraft-texturepack", tex)
+			os.path.join("bobcraft-minecraft-texturepack", texturename)
 			)
 	
 	# Now create a description.txt
