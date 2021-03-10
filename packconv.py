@@ -139,7 +139,7 @@ texture_indices = {
 
 	"wool_grey.png": [1,14],
 
-	"crack_anylength.png": [0,15,10,1],
+	"crack_anylength.png": [0,15, 10,1],
 }
 
 if __name__ == "__main__":
@@ -182,9 +182,9 @@ if __name__ == "__main__":
 		
 		# Size values
 		# used for textures that are either animated or encompass more than one block
-		if not 2 in indice: indice.insert(2,1)
+		if len(indice) < 3: indice.insert(2,1)
 		indice[2] = indice[2] * 16
-		if not 3 in indice: indice.insert(3,indice[2]/16) # assume it to be an equal size
+		if len(indice) < 4: indice.insert(3,indice[2]/16) # assume it to be an equal size
 		indice[3] = indice[3] * 16
 
 		texture = terrainpng.crop((indice[0], indice[1],
@@ -196,6 +196,17 @@ if __name__ == "__main__":
 	# (atleast in the terrain.png file)
 	# So we'll composite them from existing textures we have in terrain.png!
 
+	# first we composite crack_anylength.
+	# I hate programming like this, But I don't know how to make this happen automagically.
+	crack = Image.new("RGBA", (16,160))
+	for i in tqdm(range(0,10), desc="convert crack animation"):
+		frame = textures["crack_anylength.png"].crop(
+				(i*16, 0,
+				(i*16)+16, 16)
+		)
+
+		crack.paste(frame, (0, i*16))
+	textures["crack_anylength.png"] = crack
 
 	for texturename in tqdm(textures, desc="save textures"):
 		texture = textures[texturename]
