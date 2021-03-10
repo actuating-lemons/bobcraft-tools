@@ -10,6 +10,9 @@ import shutil
 
 from tqdm import tqdm
 
+# Generates the portal texture for us
+import portaltex
+
 block_texture_indices = {
 	"stone.png": [1,0],
 	"dirt.png": [2,0],
@@ -342,6 +345,9 @@ if __name__ == "__main__":
 	with jar.open("misc/water.png") as water:
 		water = Image.open(water)
 		textures["water_still.png"], textures["water_flow.png"] = water, water
+
+	# Generate the portal texture!
+	textures["portal.png"] = portaltex.generate_minecraft()
 
 	for texturename in tqdm(textures, desc="save textures"):
 		texture = textures[texturename]
