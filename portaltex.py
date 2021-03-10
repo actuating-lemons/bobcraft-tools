@@ -20,7 +20,7 @@ def generate_minecraft():
 
 				rand = 0
 
-				for l in range(2):
+				for l in range(4):
 					
 					b = (l * 16) * 0.5
 					c = (l * 16) * 0.5
