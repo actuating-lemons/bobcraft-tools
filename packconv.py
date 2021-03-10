@@ -231,6 +231,9 @@ gui_texture_indices = { # Measured in pixels
 	"hotbar_bg.png": [0,0, 182, 22],
 	"hotbar_fg.png": [0, 22, 24, 24],
 	
+	"formspec_button_bg.png": [0, 66, 200, 20],
+	"formspec_button_bg_hover.png": [0, 86, 200, 20],
+	"formspec_button_bg_pressed.png": [0, 86, 200, 20],
 }
 
 if __name__ == "__main__":
