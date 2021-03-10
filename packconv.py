@@ -142,7 +142,90 @@ block_texture_indices = {
 	"crack_anylength.png": [0,15, 10,1],
 }
 item_texture_indices = {
-	"flint.png": [7,0],
+	"flint.png": [6,0],
+	"coal.png": [7,0],
+	"string.png": [8,0],
+
+	"brick.png": [6,1],
+	"iron_ignot.png": [7,1],
+
+	"gold_ingot.png": [7,2],
+
+	"sign.png": [10,2],
+	"item_door.png": [11,2],
+	"bed_item.png": [13,2],
+
+	"diamond.png": [7,3],
+	"greendust.png": [8,3],
+	"clay_item.png": [9,3],
+	"paper.png": [10,3],
+	"book.png": [11,3],
+
+	# Food
+	"apple.png": [10,0],
+
+	"wheat_seeds.png": [9,0],
+	"wheat_item.png": [9,1],
+	"bread.png": [10,2],
+
+	"porkchop.png": [7,5],
+	"cooked_porkchop.png": [8,5],
+
+	"melon_slice.png": [13,6],
+
+	"sugarcane_item.png": [11,1],
+
+	# Dye
+	"dye_black.png": [14, 4],
+	"dye_dark_grey.png": [15,4],
+	"dye_red.png": [14,5],
+	"dye_pink.png": [15,5],
+	"dye_green.png": [14,6],
+	"dye_lime.png": [15,6],
+	"dye_brown.png": [14,7],
+	"dye_yellow.png": [15,7],
+	"dye_blue.png": [14,8],
+	"dye_picton.png": [15,8],
+	"dye_purple.png": [14,9],
+	"dye_magenta.png": [15,9],
+	"dye_cyan.png": [14,10],
+	"dye_orange.png": [15,10],
+	"dye_grey.png": [14,11],
+	"dye_white.png": [15,11],
+
+	# Tools
+	# Swords
+	"wood_sword.png": [0,4],
+	"stone_sword.png": [1,4],
+	"iron_sword.png": [2,4],
+	"diamond_sword.png": [3,4],
+	"gold_sword.png": [4,4],
+	# Shovel
+	"wood_shovel.png": [0,5],
+	"stone_shovel.png": [1,5],
+	"iron_shovel.png": [2,5],
+	"diamond_shovel.png": [3,5],
+	"gold_shovel.png": [4,5],
+	# Pickaxe
+	"wood_pickaxe.png": [0,6],
+	"stone_pickaxe.png": [1,6],
+	"iron_pickaxe.png": [2,6],
+	"diamond_pickaxe.png": [3,6],
+	"gold_pickaxe.png": [4,6],
+	# Axe
+	"wood_axe.png": [0,7],
+	"stone_axe.png": [1,7],
+	"iron_axe.png": [2,7],
+	"diamond_axe.png": [3,7],
+	"gold_axe.png": [4,7],
+	# Hoe
+	"wood_hoe.png": [0,8],
+	"stone_hoe.png": [1,8],
+	"iron_hoe.png": [2,8],
+	"diamond_hoe.png": [3,8],
+	"gold_hoe.png": [4,8],
+
+	"sticks.png": [5,3],
 }
 
 if __name__ == "__main__":
