@@ -177,12 +177,19 @@ if __name__ == "__main__":
 
 		indice[0] = indice[0] * 16
 		indice[1] = indice[1] * 16
+		
+		# Size values
+		# used for textures that are either animated or encompass more than one block
+		if not 2 in indice: indice.insert(2,1)
+		indice[2] = indice[2] * 16
+		if not 3 in indice: indice.insert(3,1)
+		indice[3] = indice[3] * 16
 
 		texture = terrainpng.crop((indice[0], indice[1],
-								  indice[0]+16, indice[1]+16))
+								  indice[0]+indice[2], indice[1]+indice[3]))
 
 		textures[tex] = texture
-	
+
 	for texture in tqdm(textures, desc="save textures"):
 		texture = textures[texture]
 		texture.save(
