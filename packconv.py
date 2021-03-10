@@ -318,6 +318,12 @@ if __name__ == "__main__":
 		crack.paste(frame, (0, i*16))
 	textures["crack_anylength.png"] = crack
 
+	# Water, not a composite, but it's a seperate texture.
+	# TODO: where is lava?!
+	with jar.open("misc/water.png") as water:
+		water = Image.open(water)
+		textures["water_still.png"], textures["water_flow.png"] = water, water
+
 	for texturename in tqdm(textures, desc="save textures"):
 		texture = textures[texturename]
 		texture.save(
