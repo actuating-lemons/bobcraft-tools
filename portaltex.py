@@ -44,10 +44,10 @@ def generate():
 				
 				rand += random.random() * 0.1
 				
-				r = rand * rand * 200 + 55
-				g = rand * rand * rand * rand * 255
-				b = rand * 100 + 155
-				a = rand * 100 + 155
+				r = rand * rand * 255
+				g = rand * rand * 255
+				b = rand * rand * 255
+				a = rand * rand * 100 + 155
 
 				i2 = round(y + x)
 
