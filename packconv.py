@@ -166,7 +166,7 @@ item_texture_indices = {
 
 	"wheat_seeds.png": [9,0],
 	"wheat_item.png": [9,1],
-	"bread.png": [10,2],
+	"bread.png": [9,2],
 
 	"porkchop.png": [7,5],
 	"cooked_porkchop.png": [8,5],
