@@ -60,3 +60,13 @@ if __name__ == "__main__":
 		texture.save(
 			os.path.join("bobcraft-minecraft-texturepack", tex)
 			)
+	
+	# Now create a description.txt
+	desc = """Texture Pack intended for the 'bobcraft' subgame.
+Generated from a minecraft.jar file!
+NOTE: May cause issues with certain games/mods due to its' non-namespaced texture names.
+NOTE: Will NOT work in its current state with minetest_game.
+	"""
+	txt = open(os.path.join("bobcraft-minecraft-texturepack", "description.txt"), "w")
+	txt.write(desc)
+	txt.close()
