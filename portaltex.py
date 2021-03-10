@@ -5,13 +5,16 @@ from PIL import Image
 import math
 import random
 
-def generate():
+from tqdm import tqdm
+
+# Used for the minecraft texturepack.
+def generate_minecraft():
 	portal_texture = Image.new("RGBA", (16,512))
 	portalTextureData = portal_texture.load()
 
 	random.seed(100)
 
-	for frame in range(32):
+	for frame in tqdm(range(32), desc="Generate portal animation frames"):
 		for x in range(16):
 			for y in range(16):
 
@@ -54,7 +57,7 @@ def generate():
 				# print(j1, k1, i1, l1)
 				portalTextureData[x, y + frame * 16] = (round(r), round(g), round(b), round(a))
 
-	portal_texture.show()
+	return portal_texture
 
 if __name__ == "__main__":
-	generate()
+	generate_minecraft().show()
