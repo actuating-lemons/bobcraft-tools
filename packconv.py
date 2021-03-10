@@ -8,6 +8,8 @@ import os
 import sys
 import shutil
 
+from tqdm import tqdm
+
 texture_indices = {
 	"stone.png": [1,0],
 	"dirt.png": [2,0],
@@ -45,7 +47,7 @@ if __name__ == "__main__":
 	terrainpng = jar.open("terrain.png")
 	terrainpng = Image.open(terrainpng)
 
-	for tex in texture_indices:
+	for tex in tqdm(texture_indices, desc="crop & save textures"):
 		indice = texture_indices[tex]
 
 		indice[0] = indice[0] * 16
