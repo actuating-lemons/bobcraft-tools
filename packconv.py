@@ -10,7 +10,7 @@ import shutil
 
 from tqdm import tqdm
 
-texture_indices = {
+block_texture_indices = {
 	"stone.png": [1,0],
 	"dirt.png": [2,0],
 	"grass_block_side.png": [3,0],
@@ -141,6 +141,9 @@ texture_indices = {
 
 	"crack_anylength.png": [0,15, 10,1],
 }
+item_texture_indices = {
+	"flint.png": [7,0],
+}
 
 if __name__ == "__main__":
 
@@ -160,6 +163,9 @@ if __name__ == "__main__":
 	if not "terrain.png" in jar.namelist():
 		print("minecraft.jar does not have a terrain.png file. What version is it from? This tool is built for 1.2.5!")
 		sys.exit(-1)
+	if not "gui/items.png" in jar.namelist():
+		print("minecraft.jar does not have an items.png file. What happened?")
+		sys.exit(-1)
 
 	if not os.path.exists("bobcraft-minecraft-texturepack"):
 		print("Output directory doesn't exist, creating...")
@@ -172,10 +178,13 @@ if __name__ == "__main__":
 	terrainpng = jar.open("terrain.png")
 	terrainpng = Image.open(terrainpng)
 
+	itemspng = jar.open("gui/items.png")
+	itemspng = Image.open(itemspng)
+
 	textures = {}
 
-	for tex in tqdm(texture_indices, desc="crop textures"):
-		indice = texture_indices[tex]
+	for tex in tqdm(block_texture_indices, desc="crop block textures"):
+		indice = block_texture_indices[tex]
 
 		indice[0] = indice[0] * 16
 		indice[1] = indice[1] * 16
@@ -188,6 +197,24 @@ if __name__ == "__main__":
 		indice[3] = indice[3] * 16
 
 		texture = terrainpng.crop((indice[0], indice[1],
+								  indice[0]+indice[2], indice[1]+indice[3]))
+
+		textures[tex] = texture
+
+	for tex in tqdm(item_texture_indices, desc="crop item textures"):
+		indice = item_texture_indices[tex]
+
+		indice[0] = indice[0] * 16
+		indice[1] = indice[1] * 16
+		
+		# Size values
+		# used for textures that are either animated or encompass more than one block
+		if len(indice) < 3: indice.insert(2,1)
+		indice[2] = indice[2] * 16
+		if len(indice) < 4: indice.insert(3,indice[2]/16) # assume it to be an equal size
+		indice[3] = indice[3] * 16
+
+		texture = itemspng.crop((indice[0], indice[1],
 								  indice[0]+indice[2], indice[1]+indice[3]))
 
 		textures[tex] = texture
