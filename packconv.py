@@ -227,6 +227,11 @@ item_texture_indices = {
 
 	"sticks.png": [5,3],
 }
+gui_texture_indices = { # Measured in pixels
+	"hotbar_bg.png": [0,0, 182, 22],
+	"hotbar_fg.png": [0, 22, 24, 24],
+	
+}
 
 if __name__ == "__main__":
 
@@ -264,6 +269,9 @@ if __name__ == "__main__":
 	itemspng = jar.open("gui/items.png")
 	itemspng = Image.open(itemspng)
 
+	guipng = jar.open("gui/gui.png")
+	guipng = Image.open(guipng)
+
 	textures = {}
 
 	for tex in tqdm(block_texture_indices, desc="crop block textures"):
@@ -298,6 +306,14 @@ if __name__ == "__main__":
 		indice[3] = indice[3] * 16
 
 		texture = itemspng.crop((indice[0], indice[1],
+								  indice[0]+indice[2], indice[1]+indice[3]))
+
+		textures[tex] = texture
+
+	for tex in tqdm(gui_texture_indices, desc="crop gui textures"):
+		indice = gui_texture_indices[tex]
+
+		texture = guipng.crop((indice[0], indice[1],
 								  indice[0]+indice[2], indice[1]+indice[3]))
 
 		textures[tex] = texture
