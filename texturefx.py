@@ -80,51 +80,14 @@ def generate_lava_minecraft():
 	yellow = [0.0]*256
 	speckles = [0.0]*256
 	# I don't know what this does.
-	field_1146_h = [0.0]*256
+	buffer = [0.0]*256
+
+	# we want to fill the buffers with data, so we quickly just permutate ~1000 times
+	for i in range(1024):
+		texture_data, yellow, speckles, buffer = do_the_lava(texture_data, yellow, speckles, buffer)
 
 	for frame in range(16):
-		for x in range(16):
-			for y in range(16):
-
-				amplitude = 0
-
-				xspeckler = round(math.sin(((x * math.pi * 2) / 16) * 1.2))
-				yspeckler = round(math.sin(((y * math.pi * 2) / 16) * 1.2))
-
-				for x1 in range(x-1, x+1):
-					for x2 in range(y-1, y+1):
-						xdata = x1 + xspeckler & 0xf
-						ydata = x2 + yspeckler & 0xf
-
-						amplitude += texture_data[xdata + ydata * 16]
-
-				# holy fuck!
-				# I want to see Mojang's actual code, not just the decompiled stuff.
-				# What *are* these? Is there any comments?
-				# Someone leak the minecraft code NOW! (don't)
-				# I can understand why Mojang switched to premade textures for this...
-				field_1146_h[x + y * 16] = amplitude / 10 + ((
-					yellow[(x + 0 & 0xf) + (y + 0 & 0xf) * 16] +
-					yellow[(x + 1 & 0xf) + (y + 0 & 0xf) * 16] +
-					yellow[(x + 1 & 0xf) + (y + 1 & 0xf) * 16] +
-					yellow[(x + 0 & 0xf) + (y + 1 & 0xf) * 16]) / 4) * 2
-
-				yellow[x + y * 16] += speckles[x + y * 16] * 0.01
-
-				if yellow[x + y * 16] < 0:
-					yellow[x + y * 16] = 0
-				
-				speckles[x + y * 16] -= 0.06
-
-				if random.random() < 0.005:
-					speckles[x + y * 16] = 1.5
-
-		# ... WhY DO WE SWAP THESE AROUND
-		# WHAT DOES IT DO????!!!
-		# WHAT ARE THESE CALLED???!!!!!
-		af = field_1146_h
-		field_1146_h = texture_data
-		texture_data = af
+		texture_data, yellow, speckles, buffer = do_the_lava(texture_data, yellow, speckles, buffer)
 
 		pixelindex = 0
 		for x in range(16):
@@ -146,10 +109,45 @@ def generate_lava_minecraft():
 
 				pixelindex += 1 # NUCLEAR OPTION
 
-	# lava_texture = Image.fromarray(lava_texture_pixels.astype('uint8'))
 	return lava_texture
 
+def do_the_lava(texture_data, yellow, speckles, buffer):
+	for x in range(16):
+		for y in range(16):
 
+			amplitude = 0
+
+			xspeckler = round(math.sin(((x * math.pi * 2) / 16) * 1.2))
+			yspeckler = round(math.sin(((y * math.pi * 2) / 16) * 1.2))
+
+			for x1 in range(x-1, x+1):
+				for x2 in range(y-1, y+1):
+					xdata = x1 + xspeckler & 0xf
+					ydata = x2 + yspeckler & 0xf
+
+					amplitude += texture_data[xdata + ydata * 16]
+
+			buffer[x + y * 16] = amplitude / 10 + ((
+				yellow[(x + 0 & 0xf) + (y + 0 & 0xf) * 16] +
+				yellow[(x + 1 & 0xf) + (y + 0 & 0xf) * 16] +
+				yellow[(x + 1 & 0xf) + (y + 1 & 0xf) * 16] +
+				yellow[(x + 0 & 0xf) + (y + 1 & 0xf) * 16]) / 4) * 2
+
+			yellow[x + y * 16] += speckles[x + y * 16] * 0.01
+
+			if yellow[x + y * 16] < 0:
+				yellow[x + y * 16] = 0
+			
+			speckles[x + y * 16] -= 0.06
+
+			if random.random() < 0.005:
+				speckles[x + y * 16] = 1.5
+
+	swapper = buffer
+	buffer = texture_data
+	texture_data = swapper
+
+	return texture_data, yellow, speckles, buffer
 
 # Used for bobcraft's default texture pack.
 def generate_portal_bobcraft():
