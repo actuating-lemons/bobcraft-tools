@@ -355,6 +355,7 @@ if __name__ == "__main__":
 
 	# Water, not a composite, but it's a seperate texture.
 	# TODO: where is lava?!
+	print("gather water texture")
 	with jar.open("misc/water.png") as water:
 		water = Image.open(water)
 		textures["water_still.png"], textures["water_flow.png"] = water, water
@@ -368,11 +369,13 @@ if __name__ == "__main__":
 			os.path.join("bobcraft-minecraft-texturepack", texturename)
 			)
 	
+	print("generate override.txt")
 	# We create an overrides.txt to replace textures.
 	txt = open(os.path.join("bobcraft-minecraft-texturepack", "override.txt"), "w")
 	txt.write("\n".join(overrides))
 	txt.close()
 
+	print("Generate description.txt")
 	# Now create a description.txt
 	desc = """Texture Pack intended for the 'bobcraft' subgame.
 Generated from a minecraft.jar file!
@@ -383,6 +386,7 @@ NOTE: Will NOT work in its current state with minetest_game.
 	txt.write(desc)
 	txt.close()
 
+	print("generate screenshot.png")
 	# We'd also like a screenshot.png
 	# Just to look nice, along with the description.txt
 	screenshotpng = jar.getinfo("pack.png")
