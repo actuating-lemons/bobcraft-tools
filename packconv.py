@@ -238,6 +238,14 @@ gui_texture_indices = { # Measured in pixels
 	"formspec_button_bg_hover.png": [0, 86, 200, 20],
 	"formspec_button_bg_pressed.png": [0, 86, 200, 20],
 }
+# List of overrides to apply into overrides.txt
+# we just writelines() this!
+overrides = [
+	"# Jack-o-lanterns don't have a special texture in minecraft!",
+	"bobcraft_blocks:jackolantern top pumpkin_top.png",
+	"bobcraft_blocks:jackolantern_lit top pumpkin_top.png",
+	
+]
 
 if __name__ == "__main__":
 
@@ -355,6 +363,11 @@ if __name__ == "__main__":
 			os.path.join("bobcraft-minecraft-texturepack", texturename)
 			)
 	
+	# We create an overrides.txt to replace textures.
+	txt = open(os.path.join("bobcraft-minecraft-texturepack", "override.txt"), "w")
+	txt.writelines(overrides)
+	txt.close()
+
 	# Now create a description.txt
 	desc = """Texture Pack intended for the 'bobcraft' subgame.
 Generated from a minecraft.jar file!
