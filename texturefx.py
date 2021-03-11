@@ -62,7 +62,9 @@ def generate_portal_minecraft():
 
 def generate_lava_minecraft():
 	lava_texture = Image.new("RGB", (16,16))
-	lava_texture_pixels = numpy.array(lava_texture.getdata())
+	lava_texture_pixels = lava_texture.load()
+
+
 
 	# now, of-course, the lava texture is generated ON TICK, not once at start-up, like the portal.
 	# So we have to sacrafice accuracy and generate some frames of it.
@@ -72,8 +74,10 @@ def generate_lava_minecraft():
 	# There's probably more useful mappings in yarn! but that code's too new to count!
 	# AAAAAAAAAAAAAAAAAA
 	field_1147_g = [0.0]*256
-	field_1145_i = [0.0]*256
-	field_1144_j = [0.0]*256
+	# These seem to only get interacted with in the context of x/y, so this makes sense....
+	# They were also called _i and _j, which is what x and y were called, so :shrug:
+	array_x = [0.0]*256
+	array_y = [0.0]*256
 	field_1146_h = [0.0]*256
 
 	# for frame in range(8):
@@ -97,17 +101,21 @@ def generate_lava_minecraft():
 			# What *are* these? Is there any comments?
 			# Someone leak the minecraft code NOW! (don't)
 			# I can understand why Mojang switched to premade textures for this...
-			field_1146_h[i + j * 16] = f / 10 + ((field_1145_i[(x + 0 & 0xf) + (y + 0 & 0xf) * 16] + field_1145_i[(x + 1 & 0xf) + (y + 0 & 0xf) * 16] + field_1145_i[(x + 1 & 0xf) + (y + 1 & 0xf) * 16] + field_1145_i[(x + 0 & 0xf) + (y + 1 & 0xf) * 16]) / 4) * 0.8
+			field_1146_h[x + y * 16] = f / 10 + ((
+				array_x[(x + 0 & 0xf) + (y + 0 & 0xf) * 16] +
+				array_x[(x + 1 & 0xf) + (y + 0 & 0xf) * 16] +
+				array_x[(x + 1 & 0xf) + (y + 1 & 0xf) * 16] +
+				array_x[(x + 0 & 0xf) + (y + 1 & 0xf) * 16]) / 4) * 0.8
 
-			field_1145_i[x + y * 16] += field_1144_j[x + y * 16] * 0.01
+			array_x[x + y * 16] += array_y[x + y * 16] * 0.01
 
-			if field_1145_i[x + y * 16] < 0:
-				field_1145_i[x + y * 16] = 0
+			if array_x[x + y * 16] < 0:
+				array_x[x + y * 16] = 0
 			
-			field_1144_j[i + j * 16] -= 0.06
+			array_y[x + y * 16] -= 0.06
 
 			if random.random() < 0.005:
-				field_1144_j[i + j * 16] = 1.5
+				array_y[x + y * 16] = 1.5
 
 	# ... WhY DO WE SWAP THESE AROUND
 	# WHAT DOES IT DO????!!!
@@ -116,23 +124,27 @@ def generate_lava_minecraft():
 	field_1146_h = field_1147_g
 	field_1147_g = af
 
-	for what in range(16*16):
-		f1 = field_1147_g[k] * 2
+	what = 0
+	for x in range(16):
+		for y in range(16):
+			f1 = field_1147_g[what] * 2
 
-		if f1 > 1:
-			f1 = 1
-		if f1 < 0:
-			f1 = 0
-		
-		f2 = f1
-		# finally, soemthing recognisable, COLOUR COMPONENTS!
-		r = f2 * 100 + 155
-		g = f2 * f2 * 255
-		b = f2 * f2 * f2 * f2 * 128
+			if f1 > 1:
+				f1 = 1
+			if f1 < 0:
+				f1 = 0
+			
+			f2 = f1
+			# finally, soemthing recognisable, COLOUR COMPONENTS!
+			r = f2 * 100 + 155
+			g = f2 * f2 * 255
+			b = f2 * f2 * f2 * f2 * 128
 
-		lava_texture_pixels[what-1] = [r,g,b]
-	
-	lava_texture = Image.fromarray(lava_texture_pixels.astype('uint8'))
+			lava_texture_pixels[x,y] = (round(r),round(g),round(b))
+
+			what += 1 # NUCLEAR OPTION
+
+	# lava_texture = Image.fromarray(lava_texture_pixels.astype('uint8'))
 	return lava_texture
 
 
@@ -196,3 +208,4 @@ if __name__ == "__main__":
 
 	image = generate_lava_minecraft()
 	image.show()
+	image.save("lava.png")
