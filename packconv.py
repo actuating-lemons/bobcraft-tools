@@ -386,6 +386,12 @@ if __name__ == "__main__":
 	heart.paste(textures["heart.png"], (0,0), mask = textures["heart.png"])
 	textures["heart.png"] = heart
 
+	print("rescaling crosshair...")
+	# 16x16 crosshair becomes really small!
+	crosshair = textures["crosshair.png"]
+	crosshair = crosshair.resize((16*4,16*4), Image.NEAREST)
+	textures["crosshair.png"] = crosshair
+
 	for texturename in tqdm(textures, desc="save textures"):
 		texture = textures[texturename]
 		texture.save(
