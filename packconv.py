@@ -382,6 +382,8 @@ if __name__ == "__main__":
 
 	# Generate the portal texture!
 	textures["portal.png"] = texturefx.generate_portal_minecraft()
+	# Generate the lava textures!
+	textures["lava_still.png"], textures["lava_flow.png"] = texturefx.generate_lava_minecraft()
 
 	print("Framing hearts...")
 	# hearts can't have frames in minetest, so we must composite heart.png and heart_gone.png.
