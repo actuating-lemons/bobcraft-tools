@@ -61,7 +61,7 @@ block_texture_indices = {
 	"stone_brick.png": [6,3],
 	"deadbush.png": [7,3],
 	"crafting_table_side.png": [11,3],
-	# 12, 3 is also a valid choice, but we only use one texture
+	"crafting_table_side_b.png": [12,3],
 	"furnace_front_active.png": [13,3],
 	"furnace_top.png": [14,3],
 
@@ -239,12 +239,17 @@ gui_texture_indices = { # Measured in pixels
 	"formspec_button_bg_pressed.png": [0, 86, 200, 20],
 }
 # List of overrides to apply into overrides.txt
-# we just writelines() this!
 overrides = [
 	"# Jack-o-lanterns don't have a special texture in minecraft!",
 	"bobcraft_blocks:jackolantern top pumpkin_top.png",
 	"bobcraft_blocks:jackolantern_lit top pumpkin_top.png",
-	
+	"# Minecraft has a complex crafting table texture",
+	"bobcraft_blocks:crafting_table back crafting_table_side_b.png",
+	"bobcraft_blocks:crafting_table left crafting_table_side_b.png",
+	"bobcraft_blocks:crafting_table bottom planks.png",
+	"# Minecraft doesn't have a bottom texture for the furnace",
+	"bobcraft_blocks:furnace bottom furnace_top.png",
+	"bobcraft_blocks:furnace_active bottom furnace_top.png",
 ]
 
 if __name__ == "__main__":
@@ -365,7 +370,7 @@ if __name__ == "__main__":
 	
 	# We create an overrides.txt to replace textures.
 	txt = open(os.path.join("bobcraft-minecraft-texturepack", "override.txt"), "w")
-	txt.writelines(overrides)
+	txt.write("\n".join(overrides))
 	txt.close()
 
 	# Now create a description.txt
