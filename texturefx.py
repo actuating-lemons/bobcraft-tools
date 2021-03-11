@@ -90,18 +90,17 @@ def generate_lava_minecraft():
 		pixelindex = 0
 		for x in range(16):
 			for y in range(16):
-				f1 = texture_data[pixelindex] * 2
+				val = texture_data[pixelindex] * 2
 
-				if f1 > 1:
-					f1 = 1
-				if f1 < 0:
-					f1 = 0
+				if val > 1:
+					val = 1
+				if val < 0:
+					val = 0
 				
-				f2 = f1
 				# finally, soemthing recognisable, COLOUR COMPONENTS!
-				r = f2 * 100 + 155
-				g = f2 * f2 * 255
-				b = f2 * f2 * f2 * f2 * 128
+				r = val * 100 + 155
+				g = val * val * 255
+				b = val * val * val * val * 128
 
 				lava_texture_pixels[x,y+(frame*16)] = (round(r),round(g),round(b))
 
@@ -169,14 +168,14 @@ def _minecraft_lava_step(texture_data, yellow, speckles, buffer):
 				yellow[(x + 1 & 0xf) + (y + 1 & 0xf) * 16] +
 				yellow[(x + 0 & 0xf) + (y + 1 & 0xf) * 16]) / 4) * 2
 
-			yellow[x + y * 16] += speckles[x + y * 16] * 0.01
+			yellow[x + y * 16] += speckles[x + y * 16] * 0.1
 
 			if yellow[x + y * 16] < 0:
 				yellow[x + y * 16] = 0
 			
 			speckles[x + y * 16] -= 0.06
 
-			if random.random() < 0.005:
+			if random.random() < 0.0050000000000000001:
 				speckles[x + y * 16] = 1.5
 
 	swapper = buffer
@@ -237,11 +236,8 @@ def generate_portal_bobcraft():
 	return portal_texture
 
 if __name__ == "__main__":
-	# print("Ran as main, generating bobcraft textures...")
-	# image = generate_portal_bobcraft()
-	# image.show()
-	# image.save("portal.png")
-
-	image, image2 = generate_lava_minecraft()
-	image2.show()
-	image2.save("lava.png")
+	print("Ran as main, generating bobcraft textures...")
+	generate_portal_bobcraft().save("portal.png")
+	a, b = generate_lava_minecraft()
+	a.save("lava_still.png")
+	b.save("lava_flow.png")
