@@ -82,10 +82,10 @@ def generate_lava_minecraft():
 	# we want to fill the buffers with data, so we quickly just permutate 24000 times
 	# this would be the texture of lava after 10 minutes of play, which is roughly when *i* get to my first lava pocket.
 	for i in tqdm(range(69), desc="fill lava texture buffers"):
-		texture_data, yellow, speckles, buffer = do_the_lava(texture_data, yellow, speckles, buffer)
+		texture_data, yellow, speckles, buffer = _minecraft_lava_step(texture_data, yellow, speckles, buffer)
 
 	for frame in tqdm(range(32), desc="generate lava texture frames"):
-		texture_data, yellow, speckles, buffer = do_the_lava(texture_data, yellow, speckles, buffer)
+		texture_data, yellow, speckles, buffer = _minecraft_lava_step(texture_data, yellow, speckles, buffer)
 
 		pixelindex = 0
 		for x in range(16):
@@ -127,7 +127,7 @@ def generate_lava_minecraft():
 
 	return lava_texture
 
-def do_the_lava(texture_data, yellow, speckles, buffer):
+def _minecraft_lava_step(texture_data, yellow, speckles, buffer):
 	for x in range(16):
 		for y in range(16):
 
