@@ -238,6 +238,12 @@ gui_texture_indices = { # Measured in pixels
 	"formspec_button_bg_hover.png": [0, 86, 200, 20],
 	"formspec_button_bg_pressed.png": [0, 86, 200, 20],
 }
+icons_texture_indices = { # Measured in pixels
+	"crosshair.png": [0,0, 16,16],
+
+	"heart.png": [52,0, 9,9],
+	"heart_gone.png": [16,0, 9,9],
+}
 # List of overrides to apply into overrides.txt
 overrides = [
 	"# Jack-o-lanterns don't have a special texture in minecraft!",
@@ -291,6 +297,9 @@ if __name__ == "__main__":
 	guipng = jar.open("gui/gui.png")
 	guipng = Image.open(guipng)
 
+	iconspng = jar.open("gui/icons.png")
+	iconspng = Image.open(iconspng)
+
 	textures = {}
 
 	for tex in tqdm(block_texture_indices, desc="crop block textures"):
@@ -337,6 +346,14 @@ if __name__ == "__main__":
 
 		textures[tex] = texture
 
+	for tex in tqdm(icons_texture_indices, desc="crop gui icon textures"):
+		indice = icons_texture_indices[tex]
+
+		texture = iconspng.crop((indice[0], indice[1],
+								  indice[0]+indice[2], indice[1]+indice[3]))
+
+		textures[tex] = texture
+
 	# Bobcraft has a few textures that minecraft technically doesn't.
 	# (atleast in the terrain.png file)
 	# So we'll composite them from existing textures we have in terrain.png!
@@ -362,6 +379,12 @@ if __name__ == "__main__":
 
 	# Generate the portal texture!
 	textures["portal.png"] = portaltex.generate_minecraft()
+
+	print("Framing hearts...")
+	# hearts can't have frames in minetest, so we must composite heart.png and heart_gone.png.
+	heart = textures["heart_gone.png"].copy()
+	heart.paste(textures["heart.png"], (0,0), mask = textures["heart.png"])
+	textures["heart.png"] = heart
 
 	for texturename in tqdm(textures, desc="save textures"):
 		texture = textures[texturename]
