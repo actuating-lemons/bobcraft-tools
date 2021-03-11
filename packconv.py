@@ -364,3 +364,9 @@ NOTE: Will NOT work in its current state with minetest_game.
 	txt = open(os.path.join("bobcraft-minecraft-texturepack", "description.txt"), "w")
 	txt.write(desc)
 	txt.close()
+
+	# We'd also like a screenshot.png
+	# Just to look nice, along with the description.txt
+	screenshotpng = jar.getinfo("pack.png")
+	screenshotpng.filename = "screenshot.png" # This step renames it to screenshot.png, which is what causes minetest to display it.
+	jar.extract(screenshotpng, "bobcraft-minecraft-texturepack")
