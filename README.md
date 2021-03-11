@@ -1,4 +1,6 @@
 # Bobcraft Tools
 various stand-alone programs for bobcraft.
 
-Currently, there is the texture converter, that when provided a minecraft.jar, will take all of the terrain textures and apply it to a minetest texture pack, for use in bobcraft.
+## Currently;
+ - `packconv.py` for converting a minecraft.jar into a minetest texture pack, designed for bobcraft.
+ - `portaltex.py` for generating both a minecraft and bobcraft animated portal texture.
