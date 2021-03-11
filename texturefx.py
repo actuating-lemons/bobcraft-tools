@@ -61,11 +61,8 @@ def generate_portal_minecraft():
 	return portal_texture
 
 def generate_lava_minecraft():
-	lava_texture = Image.new("RGB", (16,16*16))
+	lava_texture = Image.new("RGB", (16,16*32))
 	lava_texture_pixels = lava_texture.load()
-
-	# Reliable output
-	random.seed(69)
 
 	# now, of-course, the lava texture is generated ON TICK, not once at start-up, like the portal.
 	# So we have to sacrafice accuracy and generate some frames of it.
@@ -82,11 +79,12 @@ def generate_lava_minecraft():
 	# I don't know what this does.
 	buffer = [0.0]*256
 
-	# we want to fill the buffers with data, so we quickly just permutate ~1000 times
-	for i in range(1024):
+	# we want to fill the buffers with data, so we quickly just permutate 24000 times
+	# this would be the texture of lava after 10 minutes of play, which is roughly when *i* get to my first lava pocket.
+	for i in tqdm(range(24000), desc="fill lava texture buffers"):
 		texture_data, yellow, speckles, buffer = do_the_lava(texture_data, yellow, speckles, buffer)
 
-	for frame in range(16):
+	for frame in tqdm(range(32), desc="generate lava texture frames"):
 		texture_data, yellow, speckles, buffer = do_the_lava(texture_data, yellow, speckles, buffer)
 
 		pixelindex = 0
@@ -108,6 +106,21 @@ def generate_lava_minecraft():
 				lava_texture_pixels[x,y+(frame*16)] = (round(r),round(g),round(ydata))
 
 				pixelindex += 1 # NUCLEAR OPTION
+
+	# To keep it seamless, we then spend the last 8 frames on fading to the first frame.
+	target_frame = lava_texture.crop((0,0, 16,16))
+	for frame in tqdm(range(8), desc="seamlessifying lava texture frames"):
+		use_frame = target_frame.copy()
+		use_frame = use_frame.convert("RGBA")
+
+		cur_frame = lava_texture.crop((0,0+frame*16, 16,16+frame*16))
+		cur_frame = cur_frame.convert("RGBA")
+
+		use_frame.putalpha(round((frame/8)*255))
+		use_frame = Image.alpha_composite(cur_frame, use_frame)
+
+		use_frame = use_frame.convert("RGB")
+		lava_texture.paste(use_frame, (0, (32-frame)*16))
 
 	return lava_texture
 
