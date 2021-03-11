@@ -64,9 +64,6 @@ def generate_lava_minecraft():
 	lava_texture = Image.new("RGB", (16,16*32))
 	lava_texture_pixels = lava_texture.load()
 
-	lava_texture_flow = Image.new("RGB", (16,16*32))
-	lava_texture_flow_pixels = lava_texture_flow.load()
-
 	# now, of-course, the lava texture is generated ON TICK, not once at start-up, like the portal.
 	# So we have to sacrafice accuracy and generate some frames of it.
 
@@ -82,16 +79,13 @@ def generate_lava_minecraft():
 	# I don't know what this does.
 	buffer = [0.0]*256
 
-	# we also use this for the flow
-	offset = 0
-
 	# we want to fill the buffers with data, so we quickly just permutate 69 times
 	# this would be the texture of lava after 3 seconds of play.
 	for i in tqdm(range(69), desc="fill lava texture buffers"):
-		texture_data, yellow, speckles, buffer, _ = _minecraft_lava_step(texture_data, yellow, speckles, buffer)
+		texture_data, yellow, speckles, buffer = _minecraft_lava_step(texture_data, yellow, speckles, buffer)
 
 	for frame in tqdm(range(32), desc="generate lava texture frames"):
-		texture_data, yellow, speckles, buffer, _ = _minecraft_lava_step(texture_data, yellow, speckles, buffer)
+		texture_data, yellow, speckles, buffer = _minecraft_lava_step(texture_data, yellow, speckles, buffer)
 
 		pixelindex = 0
 		for x in range(16):
@@ -107,9 +101,9 @@ def generate_lava_minecraft():
 				# finally, soemthing recognisable, COLOUR COMPONENTS!
 				r = f2 * 100 + 155
 				g = f2 * f2 * 255
-				ydata = f2 * f2 * f2 * f2 * 128
+				b = f2 * f2 * f2 * f2 * 128
 
-				lava_texture_pixels[x,y+(frame*16)] = (round(r),round(g),round(ydata))
+				lava_texture_pixels[x,y+(frame*16)] = (round(r),round(g),round(b))
 
 				pixelindex += 1 # NUCLEAR OPTION
 
@@ -131,33 +125,29 @@ def generate_lava_minecraft():
 		use_frame = use_frame.convert("RGB")
 		lava_texture.paste(use_frame, (0, (32-frame)*16))
 
-	for frame in tqdm(range(32), desc="generate lava flow texture frames"):
-		texture_data, yellow, speckles, buffer, offset = _minecraft_lava_step(texture_data, yellow, speckles, buffer)
 
-		pixelindex = 0
+	# Now, the flow is generated pretty much the exact same as the lava's still texture, Just offset.
+	# I can't get the offset working, so we just offset the pre-generated still texture.
+	# Nobody will notice! Muahahaha!
+	offset = 0
+
+	lava_texture_flow = Image.new("RGB", (16,16*32))
+	lava_texture_flow_pixels = lava_texture_flow.load()
+
+	for frame in tqdm(range(32), desc = "generate lava flow texture frames"):
+		offset += 1
 		for x in range(16):
 			for y in range(16):
-				f1 = texture_data[pixelindex - round(offset / 3) * 16 & 0xff] * 2
 
-				if f1 > 1:
-					f1 = 1
-				if f1 < 0:
-					f1 = 0
+				y1 = y + offset
+				while y1 >= 16:
+					y1 -= 16
 				
-				f2 = f1
-
-				r = f2 * 100 + 155
-				g = f2 * f2 * 255
-				ydata = f2 * f2 * f2 * f2 * 128
-
-				lava_texture_flow_pixels[x,y+(frame*16)] = (round(r),round(g),round(ydata))
-
-				pixelindex += 1
+				lava_texture_flow_pixels[x,y1+(frame*16)] = lava_texture_pixels[x,y+(frame*16)]
 
 	return lava_texture, lava_texture_flow
 
-def _minecraft_lava_step(texture_data, yellow, speckles, buffer, offset=0):
-	offset += 1
+def _minecraft_lava_step(texture_data, yellow, speckles, buffer):
 	for x in range(16):
 		for y in range(16):
 
@@ -193,7 +183,7 @@ def _minecraft_lava_step(texture_data, yellow, speckles, buffer, offset=0):
 	buffer = texture_data
 	texture_data = swapper
 
-	return texture_data, yellow, speckles, buffer, offset
+	return texture_data, yellow, speckles, buffer
 
 # Used for bobcraft's default texture pack.
 def generate_portal_bobcraft():
