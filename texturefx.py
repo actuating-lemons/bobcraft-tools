@@ -139,7 +139,7 @@ def generate_lava_minecraft():
 		for x in range(16):
 			for y in range(16):
 
-				y1 = y + offset
+				y1 = y + round(offset / 2)
 				while y1 >= 16:
 					y1 -= 16
 				
