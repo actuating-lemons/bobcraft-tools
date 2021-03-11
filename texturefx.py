@@ -61,7 +61,7 @@ def generate_portal_minecraft():
 	return portal_texture
 
 def generate_lava_minecraft():
-	lava_texture = Image.new("RGB", (16,16))
+	lava_texture = Image.new("RGB", (16,16*8))
 	lava_texture_pixels = lava_texture.load()
 
 
@@ -80,69 +80,69 @@ def generate_lava_minecraft():
 	array_y = [0.0]*256
 	field_1146_h = [0.0]*256
 
-	# for frame in range(8):
-	for x in range(16):
-		for y in range(16):
+	for frame in range(8):
+		for x in range(16):
+			for y in range(16):
 
-			f = 0
+				f = 0
 
-			i = round(math.sin(((x * math.pi * 2) / 16) * 1.2))
-			j = round(math.sin(((y * math.pi * 2) / 16) * 1.2))
+				i = round(math.sin(((x * math.pi * 2) / 16) * 1.2))
+				j = round(math.sin(((y * math.pi * 2) / 16) * 1.2))
 
-			for k in range(x-1, x+1):
-				for l in range(y-1, y+1):
-					a = k + i & 0xf
-					b = l + j & 0xf
+				for k in range(x-1, x+1):
+					for l in range(y-1, y+1):
+						a = k + i & 0xf
+						b = l + j & 0xf
 
-					f += field_1147_g[a + b * 16]
+						f += field_1147_g[a + b * 16]
 
-			# holy fuck!
-			# I want to see Mojang's actual code, not just the decompiled stuff.
-			# What *are* these? Is there any comments?
-			# Someone leak the minecraft code NOW! (don't)
-			# I can understand why Mojang switched to premade textures for this...
-			field_1146_h[x + y * 16] = f / 10 + ((
-				array_x[(x + 0 & 0xf) + (y + 0 & 0xf) * 16] +
-				array_x[(x + 1 & 0xf) + (y + 0 & 0xf) * 16] +
-				array_x[(x + 1 & 0xf) + (y + 1 & 0xf) * 16] +
-				array_x[(x + 0 & 0xf) + (y + 1 & 0xf) * 16]) / 4) * 0.8
+				# holy fuck!
+				# I want to see Mojang's actual code, not just the decompiled stuff.
+				# What *are* these? Is there any comments?
+				# Someone leak the minecraft code NOW! (don't)
+				# I can understand why Mojang switched to premade textures for this...
+				field_1146_h[x + y * 16] = f / 10 + ((
+					array_x[(x + 0 & 0xf) + (y + 0 & 0xf) * 16] +
+					array_x[(x + 1 & 0xf) + (y + 0 & 0xf) * 16] +
+					array_x[(x + 1 & 0xf) + (y + 1 & 0xf) * 16] +
+					array_x[(x + 0 & 0xf) + (y + 1 & 0xf) * 16]) / 4) * 0.8
 
-			array_x[x + y * 16] += array_y[x + y * 16] * 0.01
+				array_x[x + y * 16] += array_y[x + y * 16] * 0.01
 
-			if array_x[x + y * 16] < 0:
-				array_x[x + y * 16] = 0
-			
-			array_y[x + y * 16] -= 0.06
+				if array_x[x + y * 16] < 0:
+					array_x[x + y * 16] = 0
+				
+				array_y[x + y * 16] -= 0.06
 
-			if random.random() < 0.005:
-				array_y[x + y * 16] = 1.5
+				if random.random() < 0.005:
+					array_y[x + y * 16] = 1.5
 
-	# ... WhY DO WE SWAP THESE AROUND
-	# WHAT DOES IT DO????!!!
-	# WHAT ARE THESE CALLED???!!!!!
-	af = field_1146_h
-	field_1146_h = field_1147_g
-	field_1147_g = af
+		# ... WhY DO WE SWAP THESE AROUND
+		# WHAT DOES IT DO????!!!
+		# WHAT ARE THESE CALLED???!!!!!
+		af = field_1146_h
+		field_1146_h = field_1147_g
+		field_1147_g = af
 
-	what = 0
-	for x in range(16):
-		for y in range(16):
-			f1 = field_1147_g[what] * 2
+		what = 0
+		for x in range(16):
+			for y in range(16):
+				f1 = field_1147_g[what] * 2
 
-			if f1 > 1:
-				f1 = 1
-			if f1 < 0:
-				f1 = 0
-			
-			f2 = f1
-			# finally, soemthing recognisable, COLOUR COMPONENTS!
-			r = f2 * 100 + 155
-			g = f2 * f2 * 255
-			b = f2 * f2 * f2 * f2 * 128
+				if f1 > 1:
+					f1 = 1
+				if f1 < 0:
+					f1 = 0
+				
+				f2 = f1
+				# finally, soemthing recognisable, COLOUR COMPONENTS!
+				r = f2 * 100 + 155
+				g = f2 * f2 * 255
+				b = f2 * f2 * f2 * f2 * 128
 
-			lava_texture_pixels[x,y] = (round(r),round(g),round(b))
+				lava_texture_pixels[x,y+(frame*16)] = (round(r),round(g),round(b))
 
-			what += 1 # NUCLEAR OPTION
+				what += 1 # NUCLEAR OPTION
 
 	# lava_texture = Image.fromarray(lava_texture_pixels.astype('uint8'))
 	return lava_texture
