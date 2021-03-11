@@ -61,7 +61,7 @@ def generate_portal_minecraft():
 	return portal_texture
 
 def generate_lava_minecraft():
-	lava_texture = Image.new("RGB", (16,16*8))
+	lava_texture = Image.new("RGB", (16,16*16))
 	lava_texture_pixels = lava_texture.load()
 
 
@@ -73,14 +73,15 @@ def generate_lava_minecraft():
 	# Fun-fact, I use the Minecraft Coder Pack as yarn hasn't done 1.2.5!
 	# There's probably more useful mappings in yarn! but that code's too new to count!
 	# AAAAAAAAAAAAAAAAAA
-	field_1147_g = [0.0]*256
+	texture_data = [0.0]*256
 	# These seem to only get interacted with in the context of x/y, so this makes sense....
 	# They were also called _i and _j, which is what x and y were called, so :shrug:
-	array_x = [0.0]*256
-	array_y = [0.0]*256
+	yellow = [0.0]*256
+	emergent_orangeness = [0.0]*256
+	# I don't know what this does.
 	field_1146_h = [0.0]*256
 
-	for frame in range(8):
+	for frame in range(16):
 		for x in range(16):
 			for y in range(16):
 
@@ -94,7 +95,7 @@ def generate_lava_minecraft():
 						a = k + i & 0xf
 						b = l + j & 0xf
 
-						f += field_1147_g[a + b * 16]
+						f += texture_data[a + b * 16]
 
 				# holy fuck!
 				# I want to see Mojang's actual code, not just the decompiled stuff.
@@ -102,32 +103,32 @@ def generate_lava_minecraft():
 				# Someone leak the minecraft code NOW! (don't)
 				# I can understand why Mojang switched to premade textures for this...
 				field_1146_h[x + y * 16] = f / 10 + ((
-					array_x[(x + 0 & 0xf) + (y + 0 & 0xf) * 16] +
-					array_x[(x + 1 & 0xf) + (y + 0 & 0xf) * 16] +
-					array_x[(x + 1 & 0xf) + (y + 1 & 0xf) * 16] +
-					array_x[(x + 0 & 0xf) + (y + 1 & 0xf) * 16]) / 4) * 0.8
+					yellow[(x + 0 & 0xf) + (y + 0 & 0xf) * 16] +
+					yellow[(x + 1 & 0xf) + (y + 0 & 0xf) * 16] +
+					yellow[(x + 1 & 0xf) + (y + 1 & 0xf) * 16] +
+					yellow[(x + 0 & 0xf) + (y + 1 & 0xf) * 16]) / 4) * 2
 
-				array_x[x + y * 16] += array_y[x + y * 16] * 0.01
+				yellow[x + y * 16] += emergent_orangeness[x + y * 16] * 0.01
 
-				if array_x[x + y * 16] < 0:
-					array_x[x + y * 16] = 0
+				if yellow[x + y * 16] < 0:
+					yellow[x + y * 16] = 0
 				
-				array_y[x + y * 16] -= 0.06
+				emergent_orangeness[x + y * 16] -= 0.06
 
 				if random.random() < 0.005:
-					array_y[x + y * 16] = 1.5
+					emergent_orangeness[x + y * 16] = 1.5
 
 		# ... WhY DO WE SWAP THESE AROUND
 		# WHAT DOES IT DO????!!!
 		# WHAT ARE THESE CALLED???!!!!!
 		af = field_1146_h
-		field_1146_h = field_1147_g
-		field_1147_g = af
+		field_1146_h = texture_data
+		texture_data = af
 
 		what = 0
 		for x in range(16):
 			for y in range(16):
-				f1 = field_1147_g[what] * 2
+				f1 = texture_data[what] * 2
 
 				if f1 > 1:
 					f1 = 1
