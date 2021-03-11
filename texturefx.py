@@ -8,7 +8,7 @@ import random
 from tqdm import tqdm
 
 # Used for the minecraft texturepack.
-def generate_minecraft():
+def generate_portal_minecraft():
 	portal_texture = Image.new("RGBA", (16,512))
 	portalTextureData = portal_texture.load()
 
@@ -59,16 +59,14 @@ def generate_minecraft():
 
 	return portal_texture
 
-bobcraft_frames = 16
-
 # Used for bobcraft's default texture pack.
-def generate_bobcraft():
-	portal_texture = Image.new("RGBA", (16,16*bobcraft_frames))
+def generate_portal_bobcraft():
+	portal_texture = Image.new("RGBA", (16,16*16))
 	portalTextureData = portal_texture.load()
 
 	random.seed(69) # nice
 
-	for frame in tqdm(range(bobcraft_frames), desc="generate bobcraft portal animation frames"):
+	for frame in tqdm(range(16), desc="generate bobcraft portal animation frames"):
 		for x in range(16):
 			for y in range(16):
 				rand = 0
@@ -95,7 +93,7 @@ def generate_bobcraft():
 						d -= scale
 
 					f = d * d + e * e
-					g = math.atan2(e, d) + (((frame / bobcraft_frames) * math.pi * 2 - f * 10) + (l * 2) * ( l * 2 - 1))
+					g = math.atan2(e, d) + (((frame / 16) * math.pi * 2 - f * 10) + (l * 2) * ( l * 2 - 1))
 					g = (math.sin(g) + 1) / 2
 					g = g / (f + 1.0)
 					rand += g * 0.5
@@ -113,7 +111,7 @@ def generate_bobcraft():
 	return portal_texture
 
 if __name__ == "__main__":
-	print("Ran as main, generating bobcraft portal...")
-	image = generate_bobcraft()
+	print("Ran as main, generating bobcraft textures...")
+	image = generate_portal_bobcraft()
 	image.show()
 	image.save("portal.png")

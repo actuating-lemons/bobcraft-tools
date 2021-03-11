@@ -11,7 +11,7 @@ import shutil
 from tqdm import tqdm
 
 # Generates the portal texture for us
-import portaltex
+import texturefx
 
 block_texture_indices = {
 	"stone.png": [1,0],
@@ -381,7 +381,7 @@ if __name__ == "__main__":
 		textures["water_still.png"], textures["water_flow.png"] = water, water
 
 	# Generate the portal texture!
-	textures["portal.png"] = portaltex.generate_minecraft()
+	textures["portal.png"] = texturefx.generate_portal_minecraft()
 
 	print("Framing hearts...")
 	# hearts can't have frames in minetest, so we must composite heart.png and heart_gone.png.
