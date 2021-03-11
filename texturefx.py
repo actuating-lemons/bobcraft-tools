@@ -64,7 +64,8 @@ def generate_lava_minecraft():
 	lava_texture = Image.new("RGB", (16,16*16))
 	lava_texture_pixels = lava_texture.load()
 
-
+	# Reliable output
+	random.seed(69)
 
 	# now, of-course, the lava texture is generated ON TICK, not once at start-up, like the portal.
 	# So we have to sacrafice accuracy and generate some frames of it.
@@ -77,7 +78,7 @@ def generate_lava_minecraft():
 	# These seem to only get interacted with in the context of x/y, so this makes sense....
 	# They were also called _i and _j, which is what x and y were called, so :shrug:
 	yellow = [0.0]*256
-	emergent_orangeness = [0.0]*256
+	speckles = [0.0]*256
 	# I don't know what this does.
 	field_1146_h = [0.0]*256
 
@@ -85,38 +86,38 @@ def generate_lava_minecraft():
 		for x in range(16):
 			for y in range(16):
 
-				f = 0
+				amplitude = 0
 
-				i = round(math.sin(((x * math.pi * 2) / 16) * 1.2))
-				j = round(math.sin(((y * math.pi * 2) / 16) * 1.2))
+				xspeckler = round(math.sin(((x * math.pi * 2) / 16) * 1.2))
+				yspeckler = round(math.sin(((y * math.pi * 2) / 16) * 1.2))
 
-				for k in range(x-1, x+1):
-					for l in range(y-1, y+1):
-						a = k + i & 0xf
-						b = l + j & 0xf
+				for x1 in range(x-1, x+1):
+					for x2 in range(y-1, y+1):
+						xdata = x1 + xspeckler & 0xf
+						ydata = x2 + yspeckler & 0xf
 
-						f += texture_data[a + b * 16]
+						amplitude += texture_data[xdata + ydata * 16]
 
 				# holy fuck!
 				# I want to see Mojang's actual code, not just the decompiled stuff.
 				# What *are* these? Is there any comments?
 				# Someone leak the minecraft code NOW! (don't)
 				# I can understand why Mojang switched to premade textures for this...
-				field_1146_h[x + y * 16] = f / 10 + ((
+				field_1146_h[x + y * 16] = amplitude / 10 + ((
 					yellow[(x + 0 & 0xf) + (y + 0 & 0xf) * 16] +
 					yellow[(x + 1 & 0xf) + (y + 0 & 0xf) * 16] +
 					yellow[(x + 1 & 0xf) + (y + 1 & 0xf) * 16] +
 					yellow[(x + 0 & 0xf) + (y + 1 & 0xf) * 16]) / 4) * 2
 
-				yellow[x + y * 16] += emergent_orangeness[x + y * 16] * 0.01
+				yellow[x + y * 16] += speckles[x + y * 16] * 0.01
 
 				if yellow[x + y * 16] < 0:
 					yellow[x + y * 16] = 0
 				
-				emergent_orangeness[x + y * 16] -= 0.06
+				speckles[x + y * 16] -= 0.06
 
 				if random.random() < 0.005:
-					emergent_orangeness[x + y * 16] = 1.5
+					speckles[x + y * 16] = 1.5
 
 		# ... WhY DO WE SWAP THESE AROUND
 		# WHAT DOES IT DO????!!!
@@ -125,10 +126,10 @@ def generate_lava_minecraft():
 		field_1146_h = texture_data
 		texture_data = af
 
-		what = 0
+		pixelindex = 0
 		for x in range(16):
 			for y in range(16):
-				f1 = texture_data[what] * 2
+				f1 = texture_data[pixelindex] * 2
 
 				if f1 > 1:
 					f1 = 1
@@ -139,11 +140,11 @@ def generate_lava_minecraft():
 				# finally, soemthing recognisable, COLOUR COMPONENTS!
 				r = f2 * 100 + 155
 				g = f2 * f2 * 255
-				b = f2 * f2 * f2 * f2 * 128
+				ydata = f2 * f2 * f2 * f2 * 128
 
-				lava_texture_pixels[x,y+(frame*16)] = (round(r),round(g),round(b))
+				lava_texture_pixels[x,y+(frame*16)] = (round(r),round(g),round(ydata))
 
-				what += 1 # NUCLEAR OPTION
+				pixelindex += 1 # NUCLEAR OPTION
 
 	# lava_texture = Image.fromarray(lava_texture_pixels.astype('uint8'))
 	return lava_texture
