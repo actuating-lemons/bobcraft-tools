@@ -113,10 +113,13 @@ def generate_lava_minecraft():
 		use_frame = target_frame.copy()
 		use_frame = use_frame.convert("RGBA")
 
+		# DBUG: Set it to ludicrous colour to test fading
+		# use_frame.paste((0,255,0), (0,0, 16,16))
+
 		cur_frame = lava_texture.crop((0,0+frame*16, 16,16+frame*16))
 		cur_frame = cur_frame.convert("RGBA")
 
-		use_frame.putalpha(round((frame/8)*255))
+		use_frame.putalpha(round((1-frame/8)*255))
 		use_frame = Image.alpha_composite(cur_frame, use_frame)
 
 		use_frame = use_frame.convert("RGB")
