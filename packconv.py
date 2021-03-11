@@ -243,6 +243,9 @@ icons_texture_indices = { # Measured in pixels
 
 	"heart.png": [52,0, 9,9],
 	"heart_gone.png": [16,0, 9,9],
+
+	"bubble.png": [16,18, 9,9],
+	"bubble_gone.png": [25,18, 9,9],
 }
 # List of overrides to apply into overrides.txt
 overrides = [
